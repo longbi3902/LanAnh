@@ -57,8 +57,8 @@
 			<div class="btn pause-btn">
 				<svg fill="white" width="24" height="24"><use href="#icon-pause" xlink:href="#icon-pause"></use></svg>
 			</div>
-			<div class="btn sound-btn">
-				<svg fill="white" width="24" height="24"><use href="#icon-sound-off" xlink:href="#icon-sound-off"></use></svg>
+			<div class="btn sound-btn"> 
+				<svg fill="white" width="24" height="24"><use class="sound" href="#icon-sound-off" xlink:href="#icon-sound-off"></use></svg>
 			</div>
 			<div class="btn settings-btn">
 				<svg fill="white" width="24" height="24"><use href="#icon-settings" xlink:href="#icon-settings"></use></svg>
@@ -144,6 +144,16 @@
 	Your browser does not support the audio element.
 </audio>
 <!-- partial -->
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		const soundButton = document.querySelector('.icon-sound-off');
+		if (soundButton) {
+			soundButton.click();  // Automatically click the sound button
+		} else {
+			console.log('Sound button not found!');
+		}
+	});
+</script>
 <script src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/329180/fscreen%401.0.1.js'></script>
 <script src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/329180/Stage%400.1.4.js'></script>
 <script src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/329180/MyMath.js'></script><script  src="./script.js"></script>

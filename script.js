@@ -2223,18 +2223,16 @@ const soundManager = {
 	 *                             louder, deeper, and reverberate longer than small explosions.
 	 *                             Note that a scale of 0 will mute the sound.
 	 */
-	playSound(type, scale=1) {
+	playSound(type, scale = 1) {
 		// Ensure `scale` is within valid range.
-		scale = MyMath.clamp(scale, 0, 1);
-
-		// Disallow starting new sounds if sound is disabled, app is running in slow motion, or paused.
-		// Slow motion check has some wiggle room in case user doesn't finish dragging the speed bar
-		// *all* the way back.
-		if (!canPlaySoundSelector() || simSpeed < 0.95) {
-			return;
-		}
+		scale = MyMath.clamp(scale, 0, 1);  // Fix range to be 0 to 1
+	
+		// Removed conditions that disallow sound playback to ensure sound always plays
+		// if (!canPlaySoundSelector() || simSpeed < 0.95) {
+		//     return;
+		// }
 		
-		// Throttle small bursts, since floral/falling leaves shells have a lot of them.
+		// Throttle small bursts to avoid too many small burst sounds in rapid succession
 		if (type === 'burstSmall') {
 			const now = Date.now();
 			if (now - this._lastSmallBurstTime < 20) {
@@ -2243,8 +2241,8 @@ const soundManager = {
 			this._lastSmallBurstTime = now;
 		}
 		
+		// Get the source configuration for the given type
 		const source = this.sources[type];
-
 		if (!source) {
 			throw new Error(`Sound of type "${type}" doesn't exist.`);
 		}
@@ -2255,15 +2253,15 @@ const soundManager = {
 			source.playbackRateMax
 		);
 		
-		// Volume descreases with scale.
+		// Volume decreases with scale
 		const scaledVolume = initialVolume * scale;
-		// Playback rate increases with scale. For this, we map the scale of 0-1 to a scale of 2-1.
-		// So at a scale of 1, sound plays normally, but as scale approaches 0 speed approaches double.
+		// Playback rate increases with scale. Scale 0 maps to playback rate 2, scale 1 maps to playback rate 1
 		const scaledPlaybackRate = initialPlaybackRate * (2 - scale);
 		
+		// Create audio nodes for playback
 		const gainNode = this.ctx.createGain();
 		gainNode.gain.value = scaledVolume;
-
+	
 		const buffer = MyMath.randomChoice(source.buffers);
 		const bufferSource = this.ctx.createBufferSource();
 		bufferSource.playbackRate.value = scaledPlaybackRate;
@@ -2272,6 +2270,7 @@ const soundManager = {
 		gainNode.connect(this.ctx.destination);
 		bufferSource.start(0);
 	}
+	
 };
 
 
